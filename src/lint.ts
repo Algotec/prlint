@@ -5,7 +5,7 @@ import load from '@commitlint/load';
 import lint from '@commitlint/lint';
 import { setOutput } from '@actions/core';
 import logWithTile from './log';
-import type { pullRequest } from './interfaces';
+import type { pullRequest, verifyOptions } from './interfaces';
 
 const defaultConfig = {
 	extends: '@commitlint/config-conventional',
@@ -59,14 +59,17 @@ export const testLintOptions = {
 /**
  * Utilizes the {@link lint} function to verify the title with options fetched using {@link getLintOptions}
  * @param {string} title - The commit/PR title to check for lint
- * @param {string} configPath - The configuration path of the commitlint config fetched from current working directory
+ * @param {verifyOptions} options - The options for verification, including the configuration path and other flags
  * @return {Promise<boolean>} - Returns true if linter passes, throws {@link Error} if failing
  */
-export async function verifyPr(pr: pullRequest, configPath: string = '', useDescription?: boolean): Promise<boolean> {
+export async function verifyPr(pr: pullRequest, { configPath = '', useDescription = false, convertToCJS = false }: verifyOptions = {}): Promise<boolean> {
 	const outputConfig = async () => {
 		if (fs.existsSync(configPath)) {
-			await convertESMtoCJS(configPath, 'commitlint-cjs.config.cjs');
-			return await load({}, { file: 'commitlint-cjs.config.cjs', cwd: process.cwd() });
+			if (convertToCJS) {
+				await convertESMtoCJS(configPath, 'commitlint-cjs.config.cjs');
+				return await load({}, { file: 'commitlint-cjs.config.cjs', cwd: process.cwd() });
+			}
+			else { return await load({}, { file: configPath, cwd: process.cwd() }); }
 		}
 		else {
 			return await load(defaultConfig);

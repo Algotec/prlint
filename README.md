@@ -45,8 +45,9 @@ jobs:
         uses: kevintyj/prlint@v1
         # Optional
         with:
-          cl-config: commitlint-cjs.config.cjs
+          cl-config: commitlint-esm.config.js
           useDescription: true # if to take into account the PR description of not, defaults to false
+          convertToCJS: true
 ```
 The above action only check's out the current repository to fetch the commitlint configuration file.
 PNPM and node is used to install necessary dependencies, then config-conventional is used as a default config.
@@ -57,6 +58,8 @@ When using the above configuration, `pnpm-lock.yaml` is required. Please use npm
 **Optional** Path to commit lint config. Default : `'commitlint.config.js'`
 #### `useDescription`
 **Optional** if to take into account the PR description of not, default: false
+#### `convertToCJS`
+**Optional** converts the config file from ESM to CJS , default: false
 
 ### Outputs 
 #### `lint-status`
@@ -66,9 +69,7 @@ linter tests fail.
 Output of the commitlint result.
 
 ### Limitations
-The current action of Prlint only accepts javascript based configurations on commitlint. 
-`v1.0.1` introduced support for ESM based configuration files. `v1.1.0` introduced support for custom config file names.
-However, due to ESM support added in `v1.0.1` non `js` config files such as `yaml` or `json` is not supported.
+ ESM support is now optional via `convertToCJS` input and assumes  `js` (or `mjs`) config files (not yaml/json)
 
 Even if the project does not use `config-conventional`, the Prlint uses the configuration as a fallback, therefore the 
 project must contain the `config-conventional` package as a development dependency.

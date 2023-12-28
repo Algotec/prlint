@@ -6,8 +6,9 @@ import type { pullRequest } from './interfaces';
 
 async function run(): Promise<void> {
 	const pullRequestPayload = github.context.payload.pull_request;
-	const configPayload = core.getInput('cl-config');
+	const configPath = core.getInput('cl-config');
 	const useDescription = !!core.getInput('useDescription');
+	const convertToCJS = !!core.getInput('convertToCJS');
 
 	if (!pullRequestPayload?.title)
 		throw new Error('Pull Request or Title not found!');
@@ -17,7 +18,7 @@ async function run(): Promise<void> {
 		number: pullRequestPayload.number,
 	};
 
-	await verifyPr(pullRequestObject, configPayload, useDescription);
+	await verifyPr(pullRequestObject, { configPath, useDescription, convertToCJS });
 }
 
 run().catch(handleError);

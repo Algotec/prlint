@@ -60,8 +60,8 @@ describe('commitlint', async () => {
 
 	it('throw error on incorrect title', async () => {
 		await expect(verifyPr({ number: 1, title: 'foo: bar' })).rejects.toThrowError(/check failed/);
-		await expect(verifyPr({ number: 1, title: 'foo: bar' }, 'something.config.js')).rejects.toThrowError(/subject-case/);
-		await expect(verifyPr({ number: 1, title: 'test: add tests' }, 'commitlint.config.js')).rejects.toThrowError(/sentence-case/);
+		await expect(verifyPr({ number: 1, title: 'foo: bar' }, { configPath: 'something.config.js' })).rejects.toThrowError(/subject-case/);
+		await expect(verifyPr({ number: 1, title: 'test: add tests' }, { configPath: 'commitlint.config.js' })).rejects.toThrowError(/sentence-case/);
 	});
 
 	it('take the description too', async () => {
@@ -69,12 +69,12 @@ describe('commitlint', async () => {
 		while (longString.length < 200)
 			longString = longString.concat('long long long ');
 
-		await expect(verifyPr({ number: 1, title: 'foo: bar', description: longString }, 'something.config.js', true)).rejects.toThrowError(/check failed/);
+		await expect(verifyPr({ number: 1, title: 'foo: bar', description: longString }, { configPath: 'something.config.js', useDescription: true })).rejects.toThrowError(/check failed/);
 	});
 	it('return true if title is valid', async () => {
 		await expect(verifyPr({ number: 1, title: 'fix: Add new commets' })).resolves.toEqual(true);
-		await expect(verifyPr({ number: 1, title: 'feat: Title is short and nice!' }, 'something.config.js')).resolves.toEqual(true);
-		await expect(verifyPr({ number: 1, title: 'test: Add test suites' }, 'commitlint.config.mjs')).resolves.toEqual(true);
+		await expect(verifyPr({ number: 1, title: 'feat: Title is short and nice!' }, { configPath: 'something.config.js' })).resolves.toEqual(true);
+		await expect(verifyPr({ number: 1, title: 'test: Add test suites' }, { configPath: 'commitlint.config.mjs' })).resolves.toEqual(true);
 	});
 
 	it('return error if file for esm conversion does not exist', async () => {

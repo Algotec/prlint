@@ -11,7 +11,11 @@ inputs:
     required: false
   useDescription:
     description: if to take into account the description of the PR too when validating
-    default: false
+    default: 'false'
+    required: false
+  convertToCJS:
+    description: if to convert the config to CJS before using it
+    default: 'false'
     required: false
 outputs:
   lint-status:

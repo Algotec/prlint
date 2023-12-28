@@ -3,3 +3,10 @@ export type pullRequest = {
 	description?: string
 	number: number
 };
+
+export type verifyOptions = {
+	convertToCJS?: boolean
+	useDescription?: boolean
+	configPath?: string
+
+};
