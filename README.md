@@ -46,6 +46,7 @@ jobs:
         # Optional
         with:
           cl-config: commitlint-cjs.config.cjs
+          useDescription: true # if to take into account the PR description of not, defaults to false
 ```
 The above action only check's out the current repository to fetch the commitlint configuration file.
 PNPM and node is used to install necessary dependencies, then config-conventional is used as a default config.
@@ -54,6 +55,8 @@ When using the above configuration, `pnpm-lock.yaml` is required. Please use npm
 ### Inputs
 #### `cl-config`
 **Optional** Path to commit lint config. Default : `'commitlint.config.js'`
+#### `useDescription`
+**Optional** if to take into account the PR description of not, default: false
 
 ### Outputs 
 #### `lint-status`

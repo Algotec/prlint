@@ -9,6 +9,10 @@ inputs:
     description: Path to commit lint config (commitlint.config.js)
     default: commitlint.config.js
     required: false
+  useDescription:
+    description: if to take into account the description of the PR too when validating
+    default: false
+    required: false
 outputs:
   lint-status:
     description: The status of the PR lint

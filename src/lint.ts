@@ -5,6 +5,7 @@ import load from '@commitlint/load';
 import lint from '@commitlint/lint';
 import { setOutput } from '@actions/core';
 import logWithTile from './log';
+import type { pullRequest } from './interfaces';
 
 const defaultConfig = {
 	extends: '@commitlint/config-conventional',
@@ -61,7 +62,7 @@ export const testLintOptions = {
  * @param {string} configPath - The configuration path of the commitlint config fetched from current working directory
  * @return {Promise<boolean>} - Returns true if linter passes, throws {@link Error} if failing
  */
-export async function verifyTitle(title: string, configPath: string = ''): Promise<boolean> {
+export async function verifyPr(pr: pullRequest, configPath: string = '', useDescription?: boolean): Promise<boolean> {
 	const outputConfig = async () => {
 		if (fs.existsSync(configPath)) {
 			await convertESMtoCJS(configPath, 'commitlint-cjs.config.cjs');
@@ -73,8 +74,8 @@ export async function verifyTitle(title: string, configPath: string = ''): Promi
 	};
 
 	const commitlintConfig: QualifiedConfig = await outputConfig();
-
-	const linterResult = await lint(title, commitlintConfig.rules, getLintOptions(commitlintConfig));
+	const message = useDescription ? `${pr.title}\n\n${pr.description}` : pr.title;
+	const linterResult = await lint(message, commitlintConfig.rules, getLintOptions(commitlintConfig));
 
 	if (linterResult.valid) {
 		setOutput('lint-status', '✅ Commitlint tests passed!\n');
